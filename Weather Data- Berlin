@@ -1,0 +1,63 @@
+import pandas as pd 
+from selenium import webdriver 
+from webdriver_manager.chrome import ChromeDriverManager 
+ 
+driver = webdriver.Chrome(ChromeDriverManager().install()) 
+ 
+url = "https://www.worldweatheronline.com/berlin-weather-history/berlin/de.aspx" 
+driver.get(url) 
+ 
+def get_df_based_on_date(driver, date_in): 
+ 
+    a = driver.find_element_by_id("ctl00_MainContentHolder_txtPastDate") 
+ 
+    a.send_keys(date_in) 
+     
+    try: 
+        driver.find_elements_by_class_name("introjs-donebutton")[0].click() 
+         
+    except Exception as e: 
+        print() 
+         
+    driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click() 
+ 
+    lst_df = pd.read_html(driver.page_source) 
+ 
+    DF =  lst_df[0].drop(columns = [1]) 
+ 
+    df_1 = DF.copy(deep = True) 
+    new_header = df_1.iloc[0] 
+    df_1.columns = new_header 
+    df_1 = df_1[2:]  
+     
+    df_1['date_'] = date_in 
+    return df_1 
+ 
+     
+# df = get_df_based_on_date(driver, "01.01.2022") 
+# df 
+ 
+df = get_df_based_on_date(driver, "01.09.2022") 
+df 
+ 
+# df = get_df_based_on_date(driver, "06.01.2022") 
+# df 
+ 
+import datetime 
+ 
+start = datetime.datetime.strptime("01-01-2020", "%m-%d-%Y") 
+end = datetime.datetime.strptime("02-02-2020", "%m-%d-%Y") 
+date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)] 
+ 
+     
+date_generated = [date_.strftime("%m-%d-%Y") for date_ in date_generated] 
+ 
+lst_dates = date_generated[:] 
+lst_df_mahsa = [] 
+for count_, date_ in enumerate(lst_dates): 
+    print(len(lst_dates)- count_,"\t| Remaining \t| ", date_) 
+    df_temp = get_df_based_on_date(driver, date_) 
+    lst_df_mahsa.append(df_temp) 
+df_total = pd.concat(lst_df_mahsa, axis = 0) 
+df_total.to_excel('Mahsa_data.xlsx', index= None) 
+df_total
