@@ -46,7 +46,7 @@ st.text('this is the sample frame you see on the widget above:')
 demo_frame
 
 #%%% the search "engine"
-our_frame = pd.read_csv('C:/Users/x-tim/Downloads/website_frame.csv')
+our_frame = pd.read_csv('regressions.csv')
 street = st.text_input('Enter a streetname to see its data')
 if (our_frame['street_name'].str.contains(street).sum()) > 0: 
     result = our_frame[our_frame['street_name'] == street]
