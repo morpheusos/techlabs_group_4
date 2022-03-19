@@ -2,6 +2,12 @@
 """
 Created on Mon Feb 21 10:43:34 2022
 
+To use this file, make sure to create a new directory called "speeds" in the current directory and put the Uber Speeds .csv files there.
+
+This file reads all the .csv files and create a dataframe from it. After this, the weather data is joined and additional dummy variables are created.
+
+The regression is calculated for all osm_way_ids with at least 1000 observations. The parameters and r-squared of each regression is saved to a df.
+
 @author: jtnjo
 """
 

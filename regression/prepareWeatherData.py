@@ -2,6 +2,8 @@
 """
 Created on Tue Feb 15 10:50:37 2022
 
+Use this file to clean up the historical weather data of Berlin that has been crawled from https://www.worldweatheronline.com/
+
 @author: jtnjo
 """
 
