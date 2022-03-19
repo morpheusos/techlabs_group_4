@@ -58,16 +58,16 @@ else:
     st.error('there is no street with this name in the dataset, check for spelling or try a different street')
     
 #%%% second attempt for a map
-CATTLE_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_cattle.csv"
+#CATTLE_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_cattle.csv"
 POULTRY_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_chickens.csv"
 
 
 HEADER = ["lng", "lat", "weight"]
-cattle_df = pd.read_csv(CATTLE_DATA, header=None).sample(frac=0.5)
-#poultry_df = pd.read_csv(POULTRY_DATA, header=None).sample(frac=0.5)
+#cattle_df = pd.read_csv(CATTLE_DATA, header=None).sample(frac=0.5)
+poultry_df = pd.read_csv(POULTRY_DATA, header=None).sample(frac=0.5)
 
-cattle_df.columns = HEADER
-#poultry_df.columns = HEADER
+#cattle_df.columns = HEADER
+poultry_df.columns = HEADER
 
 COLOR_BREWER_BLUE_SCALE = [
     [240, 249, 232],
@@ -82,6 +82,7 @@ COLOR_BREWER_BLUE_SCALE = [
 view = pdk.data_utils.compute_view(cattle_df[["lng", "lat"]])
 view.zoom = 6
 
+"""
 cattle = pdk.Layer(
     "HeatmapLayer",
     data=cattle_df,
@@ -93,8 +94,8 @@ cattle = pdk.Layer(
     get_weight="weight",
     pickable=True,
 )
-
 """
+
 poultry = pdk.Layer(
     "HeatmapLayer",
     data=poultry_df,
@@ -105,11 +106,10 @@ poultry = pdk.Layer(
     get_weight="weight",
     pickable=True,
 )
-"""
+
 
 r = pdk.Deck(
-    layers=[cattle],
-            #,poultry],
+    layers=[poultry],
     initial_view_state=view,
     map_provider="mapbox",
     map_style=pdk.map_styles.SATELLITE,
