@@ -49,7 +49,7 @@ demo_frame
 our_frame = pd.read_csv('regressions.csv')
 street = st.text_input('Enter a streetname to see its data')
 if (our_frame['street_name'].str.contains(street).sum()) > 0: 
-    result = our_frame[our_frame['street_name'] == street]
+    result = our_frame[our_frame['name'] == street]
     st.write(result)
 elif street == '':
     #nothing entered no exception needed.
