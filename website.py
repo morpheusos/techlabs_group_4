@@ -58,56 +58,60 @@ else:
     st.error('there is no street with this street_name in the dataset, check for spelling or try a different street')
     
 #%%% second attempt for a map
-# layer = pdk.Layer(
-#     'HexagonLayer',  # `type` positional argument is here
-#     our_frame,
-#     get_position=['osm_start_node_id'],
-#     auto_highlight=True,
-#     elevation_scale=50,
-#     pickable=True,
-#     elevation_range=[0, 3000],
-#     extruded=True,
-#     coverage=1)
+CATTLE_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_cattle.csv"
+POULTRY_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_chickens.csv"
 
-# # Set the viewport location
-# view_state = pdk.ViewState(
-#     longitude=-1.415,
-#     latitude=52.2323,
-#     zoom=6,
-#     min_zoom=5,
-#     max_zoom=15,
-#     pitch=40.5,
-#     bearing=-27.36)
 
-# # Combined all of it and render a viewport
-# r = pdk.Deck(layers=[layer], initial_view_state=view_state)
-# st.write(r)
+HEADER = ["lng", "lat", "weight"]
+cattle_df = pd.read_csv(CATTLE_DATA, header=None).sample(frac=0.5)
+poultry_df = pd.read_csv(POULTRY_DATA, header=None).sample(frac=0.5)
 
-#####
-df = our_frame
-#  pd.DataFrame(
-#     np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-#     columns=['lat', 'lon'])
+cattle_df.columns = HEADER
+poultry_df.columns = HEADER
 
-st.pydeck_chart(pdk.Deck(
-     map_style='mapbox://styles/mapbox/streets-v11',
-     initial_view_state=pdk.ViewState(
-         latitude=37.76,
-         longitude=-122.4,
-         zoom=11,
-         pitch=50,
-     ),
-     layers=[
-         pdk.Layer(
-            'HexagonLayer',
-            data=df,
-            get_position='osm_start_node_id',
-            radius=200,
-            elevation_scale=4,
-            elevation_range=[0, 1000],
-            pickable=True,
-            extruded=True,
-         ),
-     ],
- )
+COLOR_BREWER_BLUE_SCALE = [
+    [240, 249, 232],
+    [204, 235, 197],
+    [168, 221, 181],
+    [123, 204, 196],
+    [67, 162, 202],
+    [8, 104, 172],
+]
+
+
+view = pdk.data_utils.compute_view(cattle_df[["lng", "lat"]])
+view.zoom = 6
+
+cattle = pdk.Layer(
+    "HeatmapLayer",
+    data=cattle_df,
+    opacity=0.9,
+    get_position=["lng", "lat"],
+    aggregation=pdk.types.String("MEAN"),
+    color_range=COLOR_BREWER_BLUE_SCALE,
+    threshold=1,
+    get_weight="weight",
+    pickable=True,
 )
+
+poultry = pdk.Layer(
+    "HeatmapLayer",
+    data=poultry_df,
+    opacity=0.9,
+    get_position=["lng", "lat"],
+    threshold=0.75,
+    aggregation=pdk.types.String("MEAN"),
+    get_weight="weight",
+    pickable=True,
+)
+
+
+r = pdk.Deck(
+    layers=[cattle, poultry],
+    initial_view_state=view,
+    map_provider="mapbox",
+    map_style=pdk.map_styles.SATELLITE,
+    tooltip={"text": "Concentration of cattle in blue, concentration of poultry in orange"},
+)
+
+st.write(r)
