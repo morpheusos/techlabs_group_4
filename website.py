@@ -48,14 +48,14 @@ demo_frame
 #%%% the search "engine"
 our_frame = pd.read_csv('regressions.csv')
 street = st.text_input('Enter a streetname to see its data')
-if (our_frame['street_name'].str.contains(street).sum()) > 0: 
+if (our_frame['name'].str.contains(street).sum()) > 0: 
     result = our_frame[our_frame['name'] == street]
     st.write(result)
 elif street == '':
     #nothing entered no exception needed.
     nonsense = 0
 else:
-    st.error('there is no street with this street_name in the dataset, check for spelling or try a different street')
+    st.error('there is no street with this name in the dataset, check for spelling or try a different street')
     
 #%%% second attempt for a map
 CATTLE_DATA = "https://raw.githubusercontent.com/ajduberstein/geo_datasets/master/nm_cattle.csv"
