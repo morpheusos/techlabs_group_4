@@ -79,7 +79,7 @@ COLOR_BREWER_BLUE_SCALE = [
 ]
 
 
-view = pdk.data_utils.compute_view(cattle_df[["lng", "lat"]])
+view = pdk.data_utils.compute_view(poultry_df[["lng", "lat"]])
 view.zoom = 6
 
 """
