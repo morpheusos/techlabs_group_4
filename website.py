@@ -45,7 +45,7 @@ else:
     
 
 #%%% the map
-st.text("Since our equipment/chrome/the python API for open street map did not support exctracting that much data the following maps are examples for how our data could be represented (We didn't manage to exctract the coordinates for each street.)
+st.text("Since our equipment/chrome/the python API for open street map did not support exctracting that much data the following maps are examples for how our data could be represented (We didn't manage to exctract the coordinates for each street.")
 st.header("Map style 1 (Slider)")
 demo_frame = pd.DataFrame({
     'lat': [3.47659, 3.48679, 3.59603, 3.59867, 3.00222, 3.85622, 3.55720],
